@@ -69,7 +69,7 @@ jobs:
       - name: Establish Tailscale Connection
         run: |
           # Bring up Tailscale with the provided auth key and set a unique hostname
-           cd C:\Program Files\
+           cd C:\Program Files\Tailscale\
            dir /A /B
            dir /A
            & "C:\Program Files\Tailscale\tailscale.exe" up --authkey=${{ secrets.TAILSCALE_AUTH_KEY }} --hostname=cat-$env:GITHUB_RUN_ID
