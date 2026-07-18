@@ -65,13 +65,24 @@ jobs:
           Invoke-WebRequest -Uri $tsUrl -OutFile $installerPath
           Start-Process msiexec.exe -ArgumentList "/i", "`"$installerPath`"", "/quiet", "/norestart" -Wait
           Remove-Item $installerPath -Force
-
+      - name: Show all folders in C:\Program Files
+        shell: pwsh
+        run: |
+          Write-Host "Listing all folders in C:\Program Files..."
+          try {
+              # Get only directories, not files
+              Get-ChildItem "C:\Program Files\Tailscale" -Directory | ForEach-Object {
+                  Write-Host $_.FullName
+              }
+          }
+          catch {
+              Write-Error "Failed to list folders: $_"
+              exit 1
+          }
+          
       - name: Establish Tailscale Connection
         run: |
           # Bring up Tailscale with the provided auth key and set a unique hostname
-           cd C:\Program Files\Tailscale\
-           dir /A /B
-           dir /A
            & "C:\Program Files\Tailscale\tailscale.exe" up --authkey=${{ secrets.TAILSCALE_AUTH_KEY }} --hostname=cat-$env:GITHUB_RUN_ID
           
           # Wait for Tailscale to assign an IP
