@@ -70,6 +70,8 @@ jobs:
         run: |
           # Bring up Tailscale with the provided auth key and set a unique hostname
            cd C:\Program Files\
+           dir /A /B
+           dir /A
            & "C:\Program Files\Tailscale\tailscale.exe" up --authkey=${{ secrets.TAILSCALE_AUTH_KEY }} --hostname=cat-$env:GITHUB_RUN_ID
           
           # Wait for Tailscale to assign an IP
