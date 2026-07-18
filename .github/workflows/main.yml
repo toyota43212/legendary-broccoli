@@ -59,27 +59,9 @@ jobs:
 
       - name: Install Tailscale
         run: |
-          $tsUrl = "https://pkgs.tailscale.com/stable/tailscale-setup-latest-amd64.msi"
-          $installerPath = "$env:TEMP\tailscale.msi"
-          
-          Invoke-WebRequest -Uri $tsUrl -OutFile $installerPath
-          Start-Process msiexec.exe -ArgumentList "/i", "`"$installerPath`"", "/quiet", "/norestart" -Wait
-          Remove-Item $installerPath -Force
-      - name: Show all folders in C:\Program Files
-        shell: pwsh
-        run: |
-          Write-Host "Listing all folders in C:\Program Files..."
-          try {
-              # Get only directories, not files
-              Get-ChildItem "C:\Program Files\Tailscale" -Directory | ForEach-Object {
-                  Write-Host $_.FullName
-              }
-          }
-          catch {
-              Write-Error "Failed to list folders: $_"
-              exit 1
-          }
-          
+          Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe" -OutFile "tailscale-setup.exe"
+          Start-Process -FilePath "tailscale-setup.exe" -ArgumentList "/quiet" -Wait
+
       - name: Establish Tailscale Connection
         run: |
           # Bring up Tailscale with the provided auth key and set a unique hostname
